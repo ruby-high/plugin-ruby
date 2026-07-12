@@ -7,6 +7,8 @@
 > or run outside that monorepo without vendoring `@elizaos/core` and the shared
 > tsup/tsconfig build helpers it references.
 
+
+> **Daily publish:** Proactive community daily (+ X poll question) publish runs on the ruby-trivia background worker, not in this plugin. The API still auto-publishes as a last-resort fallback when X-poll needs a question.
 Ruby agent plugin for elizaOS — loads the **Ruby** character from your on-disk eliza config and operates the Ruby Trivia platform via the admin API.
 
 **Why this plugin exists:** Ruby is a platform *operator*, not a generic chatbot. The trivia server exposes admin endpoints and a happenings feed; this plugin gives the agent scheduled awareness, typed API access, cached platform state, and Discord alerts so humans notice outages and celebrations without babysitting logs.

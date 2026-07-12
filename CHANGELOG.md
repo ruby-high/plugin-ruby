@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Moved proactive community daily publish off the agent into the ruby-trivia background worker (CT105). Pulse/Discord and question authoring stay here; API `resolveOrGenerateDailyPollQuestion` remains the last-resort fallback for X-poll.
+
+
 All notable changes to `@elizaos/plugin-ruby` are documented here.
 This project follows [Semantic Versioning](https://semver.org/) where the published package uses it; monorepo consumers may pin `workspace:*`.
 

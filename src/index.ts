@@ -8,7 +8,6 @@ import { rubyApiLimitsProvider } from "./providers/limits.js";
 import { rubyObjectsProvider } from "./providers/objects.js";
 import { rubyPlatformProvider } from "./providers/platform.js";
 import { RubyTriviaPulseService } from "./services/ruby-trivia-pulse.js";
-import { startDailyPublishTask } from "./tasks/daily-publish.js";
 import { startPulseTask } from "./tasks/pulse.js";
 import { startQuestionAuthoringTask } from "./tasks/question-authoring.js";
 
@@ -41,7 +40,6 @@ export {
 
 let stopPulseTask: (() => void) | null = null;
 let stopQuestionAuthoringTask: (() => void) | null = null;
-let stopDailyPublishTask: (() => void) | null = null;
 
 /**
  * Ruby Trivia operator plugin.
@@ -80,14 +78,9 @@ export const rubyPlugin: Plugin = {
       stopQuestionAuthoringTask();
       stopQuestionAuthoringTask = null;
     }
-    if (stopDailyPublishTask) {
-      stopDailyPublishTask();
-      stopDailyPublishTask = null;
-    }
 
     stopPulseTask = startPulseTask(runtime);
     stopQuestionAuthoringTask = startQuestionAuthoringTask(runtime);
-    stopDailyPublishTask = startDailyPublishTask(runtime);
   },
   dispose: async () => {
     if (stopPulseTask) {
@@ -97,10 +90,6 @@ export const rubyPlugin: Plugin = {
     if (stopQuestionAuthoringTask) {
       stopQuestionAuthoringTask();
       stopQuestionAuthoringTask = null;
-    }
-    if (stopDailyPublishTask) {
-      stopDailyPublishTask();
-      stopDailyPublishTask = null;
     }
   },
 };
