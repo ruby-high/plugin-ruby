@@ -1,0 +1,108 @@
+{
+  "name": "@elizaos/plugin-ruby",
+  "version": "2.0.3-beta.1",
+  "type": "module",
+  "description": "Ruby agent plugin — loads the Ruby character from eliza config and adds Ruby Trivia integrations.",
+  "main": "./dist/index.js",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "eliza-source": {
+        "types": "./src/index.ts",
+        "import": "./src/index.ts",
+        "default": "./src/index.ts"
+      },
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./character": {
+      "types": "./dist/character.d.ts",
+      "import": "./dist/character.js",
+      "default": "./dist/character.js"
+    },
+    "./*.css": "./dist/*.css",
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "eliza-source": {
+        "types": "./src/*.ts",
+        "import": "./src/*.ts",
+        "default": "./src/*.ts"
+      },
+      "import": "./dist/*.js",
+      "default": "./dist/*.js"
+    }
+  },
+  "dependencies": {
+    "@elizaos/core": "workspace:*"
+  },
+  "agentConfig": {
+    "pluginType": "elizaos:plugin:1.0.0",
+    "pluginParameters": {
+      "RUBY_TRIVIA_API_URL": {
+        "type": "url",
+        "description": "Base URL for the Ruby Trivia API.",
+        "required": false,
+        "default": "https://app.ruby-trivia.com",
+        "sensitive": false
+      },
+      "RUBY_ANALYTICS_SECRET": {
+        "type": "string",
+        "description": "Shared secret for Ruby Trivia admin API. Falls back to ANALYTICS_SECRET.",
+        "required": false,
+        "sensitive": true
+      },
+      "RUBY_PULSE_INTERVAL_MINUTES": {
+        "type": "number",
+        "description": "Minutes between platform happenings polls (default 5).",
+        "required": false,
+        "default": 5,
+        "sensitive": false
+      },
+      "RUBY_DISCORD_CHANNEL_ID": {
+        "type": "string",
+        "description": "Discord channel for cool-event digests and outage alerts.",
+        "required": false,
+        "sensitive": false
+      },
+      "RUBY_DISCORD_ACCOUNT_ID": {
+        "type": "string",
+        "description": "Discord connector account ID (default: default).",
+        "required": false,
+        "default": "default",
+        "sensitive": false
+      }
+    },
+    "description": "Loads the Ruby character from eliza config and operates Ruby Trivia via admin API."
+  },
+  "elizaos": {
+    "plugin": {
+      "autoEnableModule": "./auto-enable.ts",
+      "capabilities": ["character", "personality", "trivia"]
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "bun run build:js && bun run build:types",
+    "clean": "rm -rf dist",
+    "test": "vitest run --config vitest.config.ts",
+    "typecheck": "tsgo --noEmit -p tsconfig.json",
+    "lint": "biome check src auto-enable.ts",
+    "lint:fix": "biome check --write src auto-enable.ts",
+    "build:js": "tsup --config ../tsup.plugin-packages.shared.ts",
+    "build:types": "tsc --noCheck -p tsconfig.build.json"
+  },
+  "files": [
+    "dist",
+    "auto-enable.ts"
+  ],
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.0.18"
+  }
+}

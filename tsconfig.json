@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "Preserve",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022"],
+    "strict": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "types": ["node", "vitest"]
+  },
+  "include": ["src/**/*.ts", "auto-enable.ts"],
+  "exclude": [
+    "dist/**",
+    "node_modules/**",
+    "src/**/__tests__/**",
+    "src/**/*.test.ts"
+  ]
+}
