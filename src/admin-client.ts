@@ -213,6 +213,35 @@ export function summarizeHappenings(payload: PlatformHappenings): string {
   const parts: string[] = [];
   const summary = payload.summary;
   if (summary) {
+    const content = summary.content;
+    const contentBits = content
+      ? [
+          content.questionsAdded > 0
+            ? `${content.questionsAdded} questions added`
+            : null,
+          content.questionsHidden > 0
+            ? `${content.questionsHidden} hidden`
+            : null,
+          (content.questionsRevised ?? 0) > 0
+            ? `${content.questionsRevised} fixed`
+            : null,
+          (content.questionsReplaced ?? 0) > 0
+            ? `${content.questionsReplaced} replaced`
+            : null,
+          content.puzzlesAdded > 0
+            ? `${content.puzzlesAdded} Traffic levels`
+            : null,
+          content.categoriesAdded > 0
+            ? `${content.categoriesAdded} categories`
+            : null,
+          content.achievementsAdded > 0
+            ? `${content.achievementsAdded} achievements`
+            : null,
+          content.dailiesPublished > 0
+            ? `${content.dailiesPublished} daily publishes`
+            : null,
+        ].filter(Boolean)
+      : [];
     const counts = [
       summary.registrations > 0
         ? `${summary.registrations} registrations`
@@ -221,6 +250,7 @@ export function summarizeHappenings(payload: PlatformHappenings): string {
         ? `${summary.dailyCompletions} daily completions`
         : null,
       summary.badgeEarns > 0 ? `${summary.badgeEarns} badge earns` : null,
+      ...contentBits,
     ].filter(Boolean);
     if (counts.length > 0) {
       parts.push(counts.join(", "));

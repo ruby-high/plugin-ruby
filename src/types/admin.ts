@@ -8,7 +8,7 @@ export type TriviaHealthResponse = {
 };
 
 export type HappeningTimelineItem = {
-  kind: "analytics" | "crew";
+  kind: "analytics" | "crew" | "content";
   at: string;
   event: string;
   userId: string | null;
@@ -30,6 +30,17 @@ export type PlatformHappenings = {
     registrations: number;
     dailyCompletions: number;
     badgeEarns: number;
+    content?: {
+      questionsAdded: number;
+      questionsHidden: number;
+      questionsRestored: number;
+      questionsRevised: number;
+      questionsReplaced: number;
+      puzzlesAdded: number;
+      categoriesAdded: number;
+      achievementsAdded: number;
+      dailiesPublished: number;
+    };
   };
   live: {
     queueWaiting: number;

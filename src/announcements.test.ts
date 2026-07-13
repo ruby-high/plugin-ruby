@@ -91,6 +91,45 @@ describe("announcements", () => {
   });
 
 
+  it("treats content-bank progress as cool pulse events", () => {
+    expect(
+      isCoolTimelineItem(
+        item({
+          kind: "content",
+          event: "content_progress",
+          summary: "Content progress: 12 questions added",
+        }),
+      ),
+    ).toBe(true);
+    expect(
+      isCoolTimelineItem(
+        item({
+          kind: "content",
+          event: "traffic_puzzle_added",
+          summary: 'New Traffic level "Gridlock"',
+        }),
+      ),
+    ).toBe(true);
+    expect(
+      isCoolTimelineItem(
+        item({
+          kind: "content",
+          event: "question_revise",
+          summary: "Fixed question dyn-0001",
+        }),
+      ),
+    ).toBe(true);
+    expect(
+      isCoolTimelineItem(
+        item({
+          kind: "content",
+          event: "question_created",
+          summary: "Added science question dyn-0001",
+        }),
+      ),
+    ).toBe(false);
+  });
+
   it("excludes routine crew practice scores from cool items", () => {
     expect(
       isCoolTimelineItem(

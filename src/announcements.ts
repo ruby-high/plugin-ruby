@@ -21,6 +21,19 @@ const COOL_ANALYTICS_EVENTS = new Set([
   "friend_added",
 ]);
 
+/** Content-bank progress — questions, Traffic levels, categories, publishes. */
+const COOL_CONTENT_EVENTS = new Set([
+  "content_progress",
+  "question_hidden",
+  "question_restored",
+  "question_revise",
+  "question_replaced",
+  "traffic_puzzle_added",
+  "category_created",
+  "achievement_created",
+  "daily_published",
+]);
+
 /** High-volume noise — would spam Discord if announced every poll. */
 const ROUTINE_EVENTS = new Set([
   "answer_submitted",
@@ -42,6 +55,7 @@ export function shouldAnnounceOutage(consecutiveFailures: number): boolean {
 export function isCoolTimelineItem(item: HappeningTimelineItem): boolean {
   // Crew practice scores flood the feed; only celebrate non-routine crew moments.
   if (item.kind === "crew") return !isRoutineCrewActivity(item);
+  if (item.kind === "content") return COOL_CONTENT_EVENTS.has(item.event);
   if (ROUTINE_EVENTS.has(item.event)) return false;
   if (COOL_ANALYTICS_EVENTS.has(item.event)) return true;
   if (item.event === "daily_quiz_completed") {
