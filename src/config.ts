@@ -34,6 +34,11 @@ export const DEFAULT_QUESTION_JUDGE_MODEL =
 /** Max distractor-only regenerate attempts before accepting/hiding. */
 export const DEFAULT_JUDGE_DISTRACTOR_RETRIES = 2;
 
+/** Mad-lib authoring cadence — slower than questions; a story catalog needs less volume. */
+export const DEFAULT_MADLIB_AUTHORING_INTERVAL_MINUTES = 180;
+/** One template per cycle keeps growth steady. */
+export const DEFAULT_MADLIBS_PER_CYCLE = 1;
+
 export type RubyTriviaConfig = {
   baseUrl: string;
   analyticsSecret: string | null;
@@ -45,6 +50,13 @@ export type RubyTriviaConfig = {
   questionAuthoringDebug: boolean;
   /** Model to use for question judging (Ollama tag). Empty string disables judge. */
   questionJudgeModel: string;
+  /** Mad-lib authoring. Off by default until the /api/admin/madlibs route ships. */
+  madlibAuthoringEnabled: boolean;
+  madlibAuthoringIntervalMinutes: number;
+  madlibsPerCycle: number;
+  madlibAuthoringDebug: boolean;
+  /** Model to use for mad-lib judging (Ollama tag). Empty string disables judge. */
+  madlibJudgeModel: string;
   discordChannelId: string | null;
   discordAccountId: string;
   discordAnnounceEnabled: boolean;
@@ -186,6 +198,30 @@ export function resolveRubyTriviaConfig(
     ),
     questionJudgeModel:
       resolveSetting(runtime, "RUBY_QUESTION_JUDGE_MODEL") ??
+      DEFAULT_QUESTION_JUDGE_MODEL,
+    // Off by default (unlike question authoring) — the /api/admin/madlibs route does not exist yet.
+    madlibAuthoringEnabled: resolveBoolSetting(
+      runtime,
+      "RUBY_MADLIB_AUTHORING_ENABLED",
+      false,
+    ),
+    madlibAuthoringIntervalMinutes: resolveIntSetting(
+      runtime,
+      "RUBY_MADLIB_AUTHORING_INTERVAL_MINUTES",
+      DEFAULT_MADLIB_AUTHORING_INTERVAL_MINUTES,
+    ),
+    madlibsPerCycle: resolveIntSetting(
+      runtime,
+      "RUBY_MADLIBS_PER_CYCLE",
+      DEFAULT_MADLIBS_PER_CYCLE,
+    ),
+    madlibAuthoringDebug: resolveBoolSetting(
+      runtime,
+      "RUBY_MADLIB_AUTHORING_DEBUG",
+      false,
+    ),
+    madlibJudgeModel:
+      resolveSetting(runtime, "RUBY_MADLIB_JUDGE_MODEL") ??
       DEFAULT_QUESTION_JUDGE_MODEL,
     discordChannelId:
       resolveSetting(runtime, "RUBY_DISCORD_CHANNEL_ID") || null,
