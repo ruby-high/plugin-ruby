@@ -28,8 +28,10 @@ Before 2.1, the plugin only loaded character + a health stub. Operators had no s
 ├─────────────────────────────────────────────────────────────────┤
 │  RUBY_CONTEXT provider ──► operator playbook + voice             │
 │  RUBY_PLATFORM provider ─► cached platform state + freshness     │
+│  RUBY_BULLPOSTS provider ► $RUBY social/bullpost voice + themes  │
 │  RUBY_OBJECTS provider ──► API noun catalog + cached views       │
 │  RUBY_TRIVIA action ──────► admin-ops (cache-first reads)        │
+│  SUGGEST_BULLPOST ───────► on-brand $RUBY social drafts          │
 │  CHECK_TRIVIA_VISITS ─────► health (compat)                      │
 ├─────────────────────────────────────────────────────────────────┤
 │  RubyTriviaPulseService ◄── tasks/pulse.ts (setInterval)         │

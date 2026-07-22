@@ -12,6 +12,24 @@ This project follows [Semantic Versioning](https://semver.org/) where the publis
 
 ### Changed
 
+- **RT/share hooks + live trivia fuel** — author/judge prompts now optimize for shareability (first-line hook, RT impulse). Drafts pull optional real Q/A snacks from the Ruby question bank to weave in only when they elevate the tweet.
+
+- **Bullpost feel judge** — each 30m draft is scored by a judge LLM (punch/brand/clarity/uniqueness + vibe). Score < 7 triggers a revise pass with concrete critique; judge notes persist into the next cycle so the day's thread keeps improving.
+
+- **Discord Post-tweet button** — each 30m bullpost suggestion includes a `Post tweet` button. Click posts via `xurl`, loudly proclaims in-channel, disables the button, and fingerprint-locks so the same copy cannot post twice.
+
+- **Daily Firecrawl marketing brief** — every 24h scrape `RUBY_BULLPOST_SITE_URL` (default `https://ruby-trivia.com`), reduce to marketing points, randomly pick one aspect for the day. 30m Discord bullposts iterate on that aspect using the previous suggested tweet as context.
+
+- **Zerollama progressive enhancement** — probe `GET /api/version`; when `distribution=zerollama`, bullpost drafts send `options.zerollama` QoS (`background`). Prefer plugin-zerollama only (disable auto-enabled plugin-ollama).
+  **Why:** Stock `/api/chat` works; QoS lets Discord interactive turns outrank batch drafts on a shared fleet host.
+
+
+- **Scheduled Discord bullposts** — every 30m (`RUBY_BULLPOST_INTERVAL_MINUTES`) the LLM drafts a new $RUBY post few-shot from the marketing bank and posts it to the announce channel.
+  **Why:** Operators want ongoing social suggestions without asking Ruby each time; bank alone was too repetitive.
+
+- **$RUBY bullposts** — `SUGGEST_BULLPOST` action + `RUBY_BULLPOSTS` provider with a 24-post on-brand bank (family trivia / token community voice).
+  **Why:** Operators need ready social drafts in Ruby Labs marketing cadence instead of off-brand LLM fluff.
+
 - **Pulse cursor is durable on disk** — `pulse-state.json` under the Eliza state dir advances `since=` across restarts; announced keys are marked after each digest attempt.
   **Why:** `runtime.setSetting` does not survive process restart, so cold-start was re-announcing the same hour of events (duplicate Discord pulses).
 

@@ -23,6 +23,7 @@ describe("resolveRubyTriviaConfig", () => {
     expect(config.questionAuthoringEnabled).toBe(true);
     expect(config.questionAuthoringIntervalMinutes).toBe(60);
     expect(config.questionsPerCycle).toBe(1);
+    expect(config.bullpostIntervalMinutes).toBe(30);
     delete process.env.ANALYTICS_SECRET;
   });
 

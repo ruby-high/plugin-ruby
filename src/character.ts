@@ -1,4 +1,8 @@
 import type { Character, IAgentRuntime } from "@elizaos/core";
+import {
+  defaultBullpostExamples,
+  defaultBullpostStyleLines,
+} from "./bullposts.js";
 import { loadRubyCharacterFromElizaConfig } from "./load-ruby-character.js";
 
 export { RUBY_CHARACTER_ID } from "./load-ruby-character.js";
@@ -45,7 +49,10 @@ export function applyRubyCharacter(runtime: IAgentRuntime): void {
   }
   if (!target.topics?.length) target.topics = [...(source.topics ?? [])];
   if (!target.postExamples?.length) {
-    target.postExamples = [...(source.postExamples ?? [])];
+    const fromSource = source.postExamples ?? [];
+    target.postExamples = fromSource.length
+      ? [...fromSource]
+      : defaultBullpostExamples();
   }
   if (!target.messageExamples?.length) {
     target.messageExamples = [...(source.messageExamples ?? [])];
@@ -54,8 +61,14 @@ export function applyRubyCharacter(runtime: IAgentRuntime): void {
     target.style = {
       all: [...(source.style?.all ?? [])],
       chat: [...(source.style?.chat ?? [])],
-      post: [...(source.style?.post ?? [])],
+      post: [
+        ...(source.style?.post?.length
+          ? source.style.post
+          : defaultBullpostStyleLines()),
+      ],
     };
+  } else if (target.style && !(target.style.post?.length)) {
+    target.style.post = defaultBullpostStyleLines();
   }
 
   target.settings = {

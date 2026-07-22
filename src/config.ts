@@ -27,6 +27,10 @@ export const BOT_FILTER_REFRESH_EVERY_PULSES = 3;
 export const DEFAULT_QUESTION_AUTHORING_INTERVAL_MINUTES = 60;
 /** One question per cycle keeps bank growth steady without flooding the API. */
 export const DEFAULT_QUESTIONS_PER_CYCLE = 1;
+/** Discord $RUBY bullpost suggestions — LLM drafts seeded by the marketing bank. */
+export const DEFAULT_BULLPOST_INTERVAL_MINUTES = 30;
+/** Marketing site scraped daily via Firecrawl for bullpost aspects. */
+export const DEFAULT_BULLPOST_SITE_URL = "https://ruby-trivia.com";
 
 /** Default judge model — Gemma 4 26B on zerollama; override with RUBY_QUESTION_JUDGE_MODEL. */
 export const DEFAULT_QUESTION_JUDGE_MODEL =
@@ -60,6 +64,12 @@ export type RubyTriviaConfig = {
   discordChannelId: string | null;
   discordAccountId: string;
   discordAnnounceEnabled: boolean;
+  /** Periodic LLM bullpost suggestions to Discord. */
+  bullpostEnabled: boolean;
+  bullpostIntervalMinutes: number;
+  bullpostDebug: boolean;
+  /** Site Firecrawl scrapes every 24h for marketing points. */
+  bullpostSiteUrl: string;
 };
 
 function resolveSettingWithSource(
@@ -112,6 +122,9 @@ export function logRubyTriviaConfigOnInit(runtime: IAgentRuntime): void {
       analyticsSecretLength: config.analyticsSecret?.length ?? 0,
       pulseEnabled: config.pulseEnabled,
       questionAuthoringEnabled: config.questionAuthoringEnabled,
+      bullpostEnabled: config.bullpostEnabled,
+      bullpostIntervalMinutes: config.bullpostIntervalMinutes,
+      bullpostSiteUrl: config.bullpostSiteUrl,
     },
     "[plugin-ruby] Ruby trivia config loaded",
   );
@@ -232,5 +245,27 @@ export function resolveRubyTriviaConfig(
       "RUBY_DISCORD_ANNOUNCE_ENABLED",
       true,
     ),
+    // Default on when Discord channel is configured; disable with RUBY_BULLPOST_ENABLED=0.
+    bullpostEnabled: resolveBoolSetting(
+      runtime,
+      "RUBY_BULLPOST_ENABLED",
+      Boolean(
+        resolveSetting(runtime, "RUBY_DISCORD_CHANNEL_ID") ||
+          process.env.RUBY_DISCORD_CHANNEL_ID,
+      ),
+    ),
+    bullpostIntervalMinutes: resolveIntSetting(
+      runtime,
+      "RUBY_BULLPOST_INTERVAL_MINUTES",
+      DEFAULT_BULLPOST_INTERVAL_MINUTES,
+    ),
+    bullpostDebug: resolveBoolSetting(
+      runtime,
+      "RUBY_BULLPOST_DEBUG",
+      false,
+    ),
+    bullpostSiteUrl:
+      resolveSetting(runtime, "RUBY_BULLPOST_SITE_URL") ||
+      DEFAULT_BULLPOST_SITE_URL,
   };
 }

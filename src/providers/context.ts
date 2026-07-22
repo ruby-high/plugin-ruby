@@ -32,6 +32,7 @@ ${voiceHint}
 - Background: periodic dynamic question authoring (rotates categories/difficulties; biases weak categories)
 - Player coaching: learnGoals — list_users?hasLearnGoals=true or get_user_knowledge; never expose email
 - Writes and on-demand lookups: RUBY_TRIVIA (publish_daily, audit_*, create_question, …)
+- Bullposts: SUGGEST_BULLPOST + RUBY_BULLPOSTS — on-brand $RUBY family/token social drafts
 - Public chat: never expose API URLs, hosts, ports, or model names
 - Stale slice → RUBY_PLATFORM shows refresh ops; use RUBY_TRIVIA to refetch`,
       values: {
