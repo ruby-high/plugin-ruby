@@ -11,6 +11,7 @@ import { RubyTriviaPulseService } from "./services/ruby-trivia-pulse.js";
 import { startPulseTask } from "./tasks/pulse.js";
 import { startQuestionAuthoringTask } from "./tasks/question-authoring.js";
 import { startMadlibAuthoringTask } from "./tasks/madlib-authoring.js";
+import { startAuditSweepTask } from "./tasks/audit-sweep.js";
 
 export { checkTriviaVisitsAction } from "./actions/check-trivia-visits.js";
 export { rubyTriviaAction } from "./actions/ruby-trivia.js";
@@ -42,6 +43,7 @@ export {
 let stopPulseTask: (() => void) | null = null;
 let stopQuestionAuthoringTask: (() => void) | null = null;
 let stopMadlibAuthoringTask: (() => void) | null = null;
+let stopAuditSweepTask: (() => void) | null = null;
 
 /**
  * Ruby Trivia operator plugin.
@@ -84,10 +86,15 @@ export const rubyPlugin: Plugin = {
       stopMadlibAuthoringTask();
       stopMadlibAuthoringTask = null;
     }
+    if (stopAuditSweepTask) {
+      stopAuditSweepTask();
+      stopAuditSweepTask = null;
+    }
 
     stopPulseTask = startPulseTask(runtime);
     stopQuestionAuthoringTask = startQuestionAuthoringTask(runtime);
     stopMadlibAuthoringTask = startMadlibAuthoringTask(runtime);
+    stopAuditSweepTask = startAuditSweepTask(runtime);
   },
   dispose: async () => {
     if (stopPulseTask) {
@@ -101,6 +108,10 @@ export const rubyPlugin: Plugin = {
     if (stopMadlibAuthoringTask) {
       stopMadlibAuthoringTask();
       stopMadlibAuthoringTask = null;
+    }
+    if (stopAuditSweepTask) {
+      stopAuditSweepTask();
+      stopAuditSweepTask = null;
     }
   },
 };

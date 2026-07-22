@@ -39,6 +39,11 @@ export const DEFAULT_MADLIB_AUTHORING_INTERVAL_MINUTES = 180;
 /** One template per cycle keeps growth steady. */
 export const DEFAULT_MADLIBS_PER_CYCLE = 1;
 
+/** Audit sweep cadence. Nightly-ish: flagged rows are a slow leak, not an incident. */
+export const DEFAULT_AUDIT_SWEEP_INTERVAL_MINUTES = 720;
+/** Questions judged per sweep. Each one is an LLM call, so keep the batch modest. */
+export const DEFAULT_AUDIT_SWEEP_PER_CYCLE = 25;
+
 export type RubyTriviaConfig = {
   baseUrl: string;
   analyticsSecret: string | null;
@@ -57,6 +62,16 @@ export type RubyTriviaConfig = {
   madlibAuthoringDebug: boolean;
   /** Model to use for mad-lib judging (Ollama tag). Empty string disables judge. */
   madlibJudgeModel: string;
+  /**
+   * Audit sweep — re-judges warned-but-playable questions. Off by default: it can HIDE live
+   * content, so it should be switched on deliberately, ideally after a dry run.
+   */
+  auditSweepEnabled: boolean;
+  auditSweepIntervalMinutes: number;
+  auditSweepPerCycle: number;
+  auditSweepDebug: boolean;
+  /** Judge and log, but send `?dryRun=true` so the server writes nothing. */
+  auditSweepDryRun: boolean;
   discordChannelId: string | null;
   discordAccountId: string;
   discordAnnounceEnabled: boolean;
@@ -223,6 +238,21 @@ export function resolveRubyTriviaConfig(
     madlibJudgeModel:
       resolveSetting(runtime, "RUBY_MADLIB_JUDGE_MODEL") ??
       DEFAULT_QUESTION_JUDGE_MODEL,
+    // Off by default: this task can hide live questions. Turn it on deliberately.
+    auditSweepEnabled: resolveBoolSetting(runtime, "RUBY_AUDIT_SWEEP_ENABLED", false),
+    auditSweepIntervalMinutes: resolveIntSetting(
+      runtime,
+      "RUBY_AUDIT_SWEEP_INTERVAL_MINUTES",
+      DEFAULT_AUDIT_SWEEP_INTERVAL_MINUTES,
+    ),
+    auditSweepPerCycle: resolveIntSetting(
+      runtime,
+      "RUBY_AUDIT_SWEEP_PER_CYCLE",
+      DEFAULT_AUDIT_SWEEP_PER_CYCLE,
+    ),
+    auditSweepDebug: resolveBoolSetting(runtime, "RUBY_AUDIT_SWEEP_DEBUG", false),
+    // Default TRUE - first real run should prove itself before it is allowed to write.
+    auditSweepDryRun: resolveBoolSetting(runtime, "RUBY_AUDIT_SWEEP_DRY_RUN", true),
     discordChannelId:
       resolveSetting(runtime, "RUBY_DISCORD_CHANNEL_ID") || null,
     discordAccountId:
